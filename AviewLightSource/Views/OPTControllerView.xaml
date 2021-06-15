@@ -1,0 +1,137 @@
+﻿<UserControl x:Class="AviewLightSource.Views.OPTControllerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AviewLightSource.Views"
+             xmlns:vm="clr-namespace:AviewLightSource.ViewModels"
+             mc:Ignorable="d"
+             MinHeight="600" MinWidth="750">
+    <UserControl.Resources>
+        <Style  TargetType="Button">
+            <Setter Property="Width" Value="70"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="#43a9c7"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="True">
+                            <TextBlock Text="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#2f96b4"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#2a89a4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.DataContext>
+            <vm:OPTControllerViewModel x:Name="_optControllerViewModel"/>
+        </Grid.DataContext>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="42*"/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <ComboBox Margin="5" 
+                  MaxHeight="30"
+                  ItemsSource="{Binding DeviceList}"
+                  SelectedItem="{Binding SN,Mode=OneWayToSource}"/>
+        <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
+                    Orientation="Horizontal">
+            <!--搜索按钮-->
+            <Button x:Name="buttonScan" 
+                Grid.Column="1" 
+                Margin="5"
+                MaxHeight="30"
+                Content="搜索"
+                Command="{Binding CommandScan}"/>
+            <!--连接按钮-->
+            <Button x:Name="buttonOpen"
+                Grid.Column="2" 
+                Margin="5"
+                MaxHeight="30"
+                Content="连接"
+                Command="{Binding CommandOpen}"/>
+            <!--断开按钮-->
+            <Button x:Name="buttonClose" 
+                Grid.Column="3" 
+                Margin="5"
+                MaxHeight="30"
+                Content="断开"
+                Command="{Binding CommandClose}"/>
+        </StackPanel>
+       
+        <!--保存按钮-->
+        <Button x:Name="buttonSave" 
+                Grid.Column="3" 
+                Grid.Row="2" 
+                Margin="5"
+                MaxHeight="30"
+                Content="保存"
+                Command="{Binding CommandSave}"/>
+
+        <StatusBar Grid.Row="2" Grid.Column="0" Margin="5" Padding="5" Background="White">
+            <TextBlock Margin="5" Text="{Binding Path=Info}"></TextBlock>
+        </StatusBar>
+
+
+        <Grid Grid.Row="1" 
+            Grid.Column="0" 
+            Grid.ColumnSpan="4">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+
+                <local:UCLightSourceSlider Index="1"/>
+                <local:UCLightSourceSlider Index="2" Grid.Row="1"/>
+                <local:UCLightSourceSlider Index="3" Grid.Row="2"/>
+                <local:UCLightSourceSlider Index="4" Grid.Row="3"/>
+                <local:UCLightSourceSlider Index="5" Grid.Row="4"/>
+                <local:UCLightSourceSlider Index="6" Grid.Row="5"/>
+                <local:UCLightSourceSlider Index="7" Grid.Row="6"/>
+                <local:UCLightSourceSlider Index="8" Grid.Row="7"/>
+                <local:UCLightSourceSlider Index="9" Grid.Row="0" Grid.Column="1"/>
+                <local:UCLightSourceSlider Index="10" Grid.Row="1" Grid.Column="1"/>
+                <local:UCLightSourceSlider Index="11" Grid.Row="2" Grid.Column="1"/>
+                <local:UCLightSourceSlider Index="12" Grid.Row="3" Grid.Column="1"/>
+                <local:UCLightSourceSlider Index="13" Grid.Row="4" Grid.Column="1"/>
+                <local:UCLightSourceSlider Index="14" Grid.Row="5" Grid.Column="1"/>
+                <local:UCLightSourceSlider Index="15" Grid.Row="6" Grid.Column="1"/>
+                <local:UCLightSourceSlider Index="16" Grid.Row="7" Grid.Column="1"/>
+
+            </Grid>
+
+
+        </Grid>
+
+    </Grid>
+</UserControl>
