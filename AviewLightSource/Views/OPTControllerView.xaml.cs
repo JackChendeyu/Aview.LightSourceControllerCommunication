@@ -23,6 +23,8 @@ namespace AviewLightSource.Views
         public OPTControllerView()
         {
             InitializeComponent();
+            this._optControllerViewModel.DeviceHasOpened += OnDeviceHasOpened;
+            this.itemsControlChannels.ItemsSource = this._optControllerViewModel.GetOPTChannelCollection();
 
         }
         
@@ -31,6 +33,15 @@ namespace AviewLightSource.Views
             this._optControllerViewModel.SetCurrentOPTObject(opt);
         }
 
+        public void OnDeviceHasOpened()
+        {
+            this.itemsControlChannels.ItemsSource = this._optControllerViewModel.GetOPTChannelCollection();
 
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.itemsControlChannels.ItemsSource= this._optControllerViewModel.GetOPTChannelCollection();
+        }
     }
 }

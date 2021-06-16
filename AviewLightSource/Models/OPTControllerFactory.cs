@@ -16,11 +16,11 @@ namespace AviewLightSource
         public static OPTController CreateInstance(string filePath, string fileName)
         {
             string fullPath = System.IO.Path.Combine(filePath, fileName);
-            //if (!System.IO.File.Exists(fullPath))
-            //{
-            //    Trace.Fail(fullPath);
-            //    //throw new ArgumentException("指定文件不存在", nameof(fullPath));
-            //}
+            return CreateInstance(fullPath);
+        }
+
+        public static OPTController CreateInstance(string fullPath)
+        {          
             OPTController opt;
             try
             {

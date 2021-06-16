@@ -326,8 +326,8 @@
             Style="{StaticResource chkBullet}"                   
             Background="#5387b9" 
             IsChecked="False"                   
-            Content="Off"                  
-            Tag="On"                  
+            Content="On"                  
+            Tag="Off"                  
             Margin="5"/>
         <TextBox 
             x:Name="textBoxValue"

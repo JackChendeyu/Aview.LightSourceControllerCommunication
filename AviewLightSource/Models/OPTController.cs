@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 namespace AviewLightSource
 {
@@ -57,12 +58,19 @@ namespace AviewLightSource
         /// </summary>
         OVER_CURRENT_PROTECTION = 4
     }
-    public class OPTController : CSharp_OPTControllerAPI.OPTControllerAPI, IConnectDLL.IConnectBase
+    public class OPTController : CSharp_OPTControllerAPI.OPTControllerAPI
     {
+
+        /// <summary>
+        /// 当前对象序列化保存路径
+        /// </summary>
+        [Newtonsoft.Json.JsonIgnore]
         public string SavePath { get; set; }
+
         /// <summary>
         /// OPT光源控制器通道数
         /// </summary>
+        [Newtonsoft.Json.JsonIgnore]
         public int ChannelCount { get; set; }
 
         /// <summary>
@@ -91,39 +99,71 @@ namespace AviewLightSource
         /// OPT光源控制器连接方式
         /// </summary>
         public OPT_COMMUNICATION_MODEL Model { get; set; }
+
         /// <summary>
-        /// OPT光源控制器通道亮度值集合
-        /// </summary>
-        public IntensityItem[] Channels { get; set; }
+        /// OPT光源控制器通道数据集合
+        /// </summary>     
+        public ObservableCollection<OPTChannel> OPTChannelCollection { get; set; }
+
+        public OPTController()
+        {
+            this.Model = OPT_COMMUNICATION_MODEL.SN; //默认通过SN码连接
+            OPTChannelCollection = new ObservableCollection<OPTChannel>();
+        }
 
         #region Public Members
 
         public bool SetIntensityByTypeName()
         {
-            if (Channels == null)
+            OPTController opt = OPTControllerFactory.CreateInstance(SavePath);
+            if (opt?.OPTChannelCollection==null || opt?.OPTChannelCollection.Count==0)
                 return false;
+            OPTChannelCollection = opt.OPTChannelCollection;
             int ret = 0;
-            for (int i = 0; i < ChannelCount; i++)
+            try
             {
-                ret = base.SetIntensity(Channels[i].channel, Channels[i].intensity);
-                if (ret != 0)
-                    return false;
+                for (int i = 0; i < OPTChannelCollection.Count; i++)
+                {
+                    ret = base.SetIntensity(OPTChannelCollection[i].Channel, OPTChannelCollection[i].Intensity);
+                    if (ret != 0)
+                        return false;
+                }
             }
-
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
             return ret == 0;
         }
 
-        public void ReadAllIntensity()
+
+        public void ReadAllIntensity()      //Initial after this.Open function excuted
         {
-            Channels = new IntensityItem[ChannelCount];
-            for (int i = 0; i < Channels.Length; i++)
+            OPTChannelCollection.Clear();           
+            int result;
+            for (int i = 0; i < ChannelCount; i++)
             {
-                Channels[i].channel = i + 1;
-                base.ReadIntensity(Channels[i].channel, ref Channels[i].intensity);
+                OPTChannel channelData = new OPTChannel()
+                {
+                    Name = $"CH{i + 1}",
+                    Channel = i + 1,
+                };
+                result = base.TurnOnChannel(channelData.Channel);
+                if (result == 0)
+                {
+                    channelData.OnOff = true;
+                }
+                int value = default;
+                result = base.ReadIntensity(channelData.Channel, ref value);
+                if (result == 0)
+                {
+                    channelData.Intensity = value;
+                }
+                OPTChannelCollection.Add(channelData);
             }
         }
         public void Save()
-        {         
+        {
             string objectStr = Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
             using (System.IO.StreamWriter sw = new System.IO.StreamWriter(SavePath))
             {
@@ -132,7 +172,6 @@ namespace AviewLightSource
         }
         #endregion Public Members
 
-        #region IConnectDLL.IConnectBase Members
         /// <summary>
         /// 断开连接OPT光源控制器
         /// </summary>
@@ -171,31 +210,30 @@ namespace AviewLightSource
 
                 case OPT_COMMUNICATION_MODEL.IP:
                     if (string.IsNullOrEmpty(this.IPAddress))
-                        throw new Exception($"{nameof(this.IPAddress)} is null or empty");
+                    {
+                        ret = -1;
+                        break;
+                    }
                     ret = base.CreateEthernetConnectionByIP(this.IPAddress);
                     break;
 
                 case OPT_COMMUNICATION_MODEL.SN:
                     if (string.IsNullOrEmpty(this.SN))
-                        throw new Exception($"{nameof(this.SN)} is null or empty");
+                    {
+                        ret = -1;
+                        break;
+                    }
                     ret = base.CreateEthernetConnectionBySN(SN);
                     break;
             }
             if (ret == 0)
             {
-                IsConnected = true;
-                int count = default;
-                ret = base.GetControllerChannels(ref count);
-                if (ret == 0)
-                {
-                    ChannelCount = count;
-                    base.TurnOffChannel(0);
-                    System.Threading.Thread.Sleep(500);
-                    base.TurnOnChannel(0);
-
-                }
+                IsConnected = true;               
+                base.TurnOffChannel(0);
+                System.Threading.Thread.Sleep(500);
+                base.TurnOnChannel(0);
+                
             }
         }
-        #endregion IConnectDLL.IConnectBase Members
     }
 }

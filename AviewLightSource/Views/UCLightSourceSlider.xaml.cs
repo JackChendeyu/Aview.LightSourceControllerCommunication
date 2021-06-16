@@ -38,6 +38,7 @@ namespace AviewLightSource.Views
             BindingOperations.SetBinding(textBlockName, TextBlock.TextProperty, binding);
             Binding bindingValue = new Binding($"Channel{Index}Intensity");
             bindingValue.Mode = BindingMode.TwoWay;
+            bindingValue.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
             BindingOperations.SetBinding(slider1, Slider.ValueProperty, bindingValue);
             BindingOperations.SetBinding(textBoxValue, TextBox.TextProperty, bindingValue);
             Binding bindingEnable = new Binding($"Channel{Index}Enable");
