@@ -14,9 +14,6 @@ namespace AviewLightSource.ViewModels
     {
         //variable
         private OPTController _opt;
-        private object _lockGetPropertyIntensity = new object();
-        private object _lockSetPropertyIntensity = new object();
-        private object _lockSetPropertyOnOff = new object();
         private object _lockReportMsg = new object();
 
         //constant
@@ -26,7 +23,9 @@ namespace AviewLightSource.ViewModels
         public Action DeviceHasOpened;
 
         #region Properties
-
+        /// <summary>
+        /// OPT光源控制器是否为IP连接方式
+        /// </summary>
         public bool IsIPComunication
         {
             get => _opt.Model == OPT_COMMUNICATION_MODEL.IP;
@@ -37,7 +36,9 @@ namespace AviewLightSource.ViewModels
                 RaisePropertyChanged(nameof(IsIPComunication));
             }
         }
-
+        /// <summary>
+        /// OPT光源控制器是否为SN连接方式
+        /// </summary>
         public bool IsSNComunication
         {
             get => _opt.Model == OPT_COMMUNICATION_MODEL.SN;
@@ -48,6 +49,9 @@ namespace AviewLightSource.ViewModels
                 RaisePropertyChanged(nameof(IsSNComunication));
             }
         }
+        /// <summary>
+        /// OPT光源控制器是否为COM连接方式
+        /// </summary>
         public bool IsCOMComunication
         {
             get => _opt.Model == OPT_COMMUNICATION_MODEL.COM;
@@ -60,6 +64,9 @@ namespace AviewLightSource.ViewModels
         }
 
         private List<string> _deviceList;
+        /// <summary>
+        /// 当前以太网下OPT光源控制器设备数量
+        /// </summary>
         public List<string> DeviceList
         {
             get => _deviceList;
@@ -71,6 +78,9 @@ namespace AviewLightSource.ViewModels
         }
 
         private string _info;
+        /// <summary>
+        /// 运行信息
+        /// </summary>
         public string Info
         {
             get => _info;
@@ -81,6 +91,9 @@ namespace AviewLightSource.ViewModels
             }
         }
 
+        /// <summary>
+        /// 当前OPT光源控制器序列号
+        /// </summary>
         public string SN
         {
             get => _opt?.SN;
@@ -90,99 +103,45 @@ namespace AviewLightSource.ViewModels
                 RaisePropertyChanged(nameof(SN));
             }
         }
-        /******************************************************************************/
-        #endregion //Properties
 
+        #endregion //Properties
+        /******************************************************************************/
+        //Command
+
+        //Search
         public RelayCommand CommandScan { get => new RelayCommand(Scan); }
+
+        //Open
         public RelayCommand CommandOpen { get => new RelayCommand(Open, () => !_opt.IsConnected); }
+
+        //Close
         public RelayCommand CommandClose { get => new RelayCommand(Close, () => _opt.IsConnected); }
-        public RelayCommand CommandSave { get => new RelayCommand(Save); }
+
+        //Save
+        public RelayCommand CommandSave { get => new RelayCommand(Save); }      
+        /******************************************************************************/
 
         #region Constructors
         public OPTControllerViewModel()
         {
             DeviceList = new List<string>();
             _opt = new OPTController();
-
-
         }
         #endregion //Constructors
 
-        #region Private Methods
-        private int GetPropertyChannelIntensity(string propertyName)
-        {
-            lock (_lockGetPropertyIntensity)
-            {
-                //if (_opt == null || _opt.Channels == null) return 0;
-                //int index = Convert.ToInt32(System.Text.RegularExpressions.Regex.Replace(propertyName, @"[^0-9]+", ""));
-                //if (index > _opt.ChannelCount) return 0;
-                //return _opt.Channels[index - 1].intensity;
-            }
-            return 0;
-        }
-        private void SetPropertyIntensity(string propertyName, int intensity)
-        {
-//            lock (_lockSetPropertyIntensity)
-//            {
-//                int index = Convert.ToInt32(System.Text.RegularExpressions.Regex.Replace(propertyName, @"[^0-9]+", ""));
-//#if TEST
-//                _opt.Channels[index - 1].intensity = intensity;
-//#else
-//            int result;
-//            result = _opt.SetIntensity(index, intensity);
-//            if (result == 0)
-//            {
-//                _opt.Channels[index - 1].intensity = intensity;
-//            }
-//            else
-//            {
-//                return;
-//            }
-//#endif
-//            }
 
-        }
-        private void SetPropertyOnOff(int index, bool channelOnOff, ref bool channelState)
-        {
-//            lock (_lockSetPropertyOnOff)
-//            {
-//#if TEST
-//                if (channelOnOff)
-//                {
-//                    channelState = true;
-//                }
-//                else
-//                {
-//                    channelState = false;
-//                }
-//#else
-//            int result;
-//            if (channelOnOff)
-//            {
-//                result = _opt.TurnOnChannel(index);
-//                if (result == 0) channelState = true;
-//                else channelState = false;
-//            }
-//            else
-//            {
-//                result = _opt.TurnOffChannel(index);
-//                if (result == 0) channelState = false;
-//                else channelState = true;
-//            }
-//#endif
-//            }
-
-        }
-#endregion //Private Methods
-
-
-
-#region Public Methods
+        #region Public Methods
+        /// <summary>
+        /// 保存当前配置
+        /// </summary>
         public void Save()
         {
             _opt.Save();
 
         }
+        /// <summary>
+        /// 搜索以太网内OPT光源控制器设备
+        /// </summary>
         public void Scan()
         {
             List<string> list = new List<string>();
@@ -196,6 +155,9 @@ namespace AviewLightSource.ViewModels
             }
             DeviceList = list;
         }
+        /// <summary>
+        /// 打开指定OPT光源控制器
+        /// </summary>
         public void Open()
         {
 #if TEST
@@ -213,64 +175,46 @@ namespace AviewLightSource.ViewModels
             DeviceHasOpened?.Invoke();
 #else
             _opt.Open();
-
-            //System.Diagnostics.Trace.Assert(_opt.IsConnected);
+            System.Diagnostics.Trace.Assert(_opt.IsConnected);
             if (_opt.IsConnected)
             {
-                int ret;
-                int count = default;
-                ret = _opt.GetControllerChannels(ref count);
-                if (ret == 0)
-                {
-                    _opt.ChannelCount = count;
-                    _opt.ReadAllIntensity();
-                    DeviceHasOpened?.Invoke();
-                }
-            }
-            //for (int i = 0; i < _opt.ChannelCount; i++)
-            //{
-            //    _opt.Channels[i].channel = i + 1;
-            //    System.Reflection.PropertyInfo propertyIntensity = this.GetType().GetProperty($"Channel{i + 1}Intensity", typeof(int));
-            //    propertyIntensity.SetValue(this, _opt.Channels == null ? 0 : _opt.Channels[i].intensity);
-            //    System.Reflection.PropertyInfo propertyEnable = this.GetType().GetProperty($"Channel{i + 1}Enable", typeof(bool));
-            //    propertyEnable.SetValue(this, i + 1 <= _opt.ChannelCount ? true : false);
-            //    System.Reflection.PropertyInfo propertyOnOff = this.GetType().GetProperty($"Channel{i + 1}OnOff", typeof(bool));
-            //    propertyOnOff.SetValue(this, true);
-            //}
+                DeviceHasOpened?.Invoke();
+               
+            }         
 #endif
-
         }
 
+        /// <summary>
+        /// 关闭指定OPT光源控制器
+        /// </summary>
         public void Close()
         {
-            _opt.Close();
-            //for (int i = 0; i < _opt.ChannelCount; i++)
-            //{             
-            //    System.Reflection.PropertyInfo propertyEnable = this.GetType().GetProperty($"Channel{i + 1}Enable", typeof(bool));
-            //    propertyEnable.SetValue(this, false);
-
-            //}
+            _opt.Close();          
         }
 
+        /// <summary>
+        /// 设置当前OPT光源控制器对象
+        /// </summary>
+        /// <param name="opt">当前OPT光源控制器赋值对象</param>
         public void SetCurrentOPTObject(OPTController opt)
         {
             this._opt = opt;
-            //for (int i = 0; i < _opt.ChannelCount; i++)
-            //{
-            //    _opt.Channels[i].channel = i + 1;
-            //    System.Reflection.PropertyInfo propertyIntensity = this.GetType().GetProperty($"Channel{i + 1}Intensity", typeof(int));
-            //    propertyIntensity.SetValue(this, _opt.Channels == null ? 0 : _opt.Channels[i].intensity);
-            //    System.Reflection.PropertyInfo propertyEnable = this.GetType().GetProperty($"Channel{i + 1}Enable", typeof(bool));
-            //    propertyEnable.SetValue(this, i + 1 <= _opt.ChannelCount ? true : false);
-            //    System.Reflection.PropertyInfo propertyOnOff = this.GetType().GetProperty($"Channel{i + 1}OnOff", typeof(bool));
-            //    propertyOnOff.SetValue(this, true);
-            //}
+           
         }
+
+        /// <summary>
+        /// 获取当前OPT光源控制器通道集合
+        /// </summary>
+        /// <returns>ObservableCollection<OPTChannel>集合，包含通道信息</returns>
         public ObservableCollection<OPTChannel> GetOPTChannelCollection()
         {
             return _opt.OPTChannelCollection;
         }
 
+        /// <summary>
+        /// 信息
+        /// </summary>
+        /// <param name="message">将要汇报的信息</param>
         public void ReportMsg(string message)
         {
             lock (_lockReportMsg)
@@ -279,6 +223,6 @@ namespace AviewLightSource.ViewModels
 
             }
         }
-#endregion //Public Methods
+        #endregion //Public Methods
     }
 }

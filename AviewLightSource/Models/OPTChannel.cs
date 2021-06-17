@@ -8,47 +8,54 @@ namespace AviewLightSource
 {
     public class OPTChannel : CSharp_OPTControllerAPI.OPTControllerAPI
     {
+        /// <summary>
+        /// 通道打开关闭事件
+        /// </summary>
+        [Newtonsoft.Json.JsonIgnore]
+        public Func<bool,bool> ChannelOnOffEvent;
+
+        /// <summary>
+        /// 通道设置亮度值事件
+        /// </summary>
+        [Newtonsoft.Json.JsonIgnore]
+        public Func<int, int> ChannelSetIntensityEvent;
+
+        /// <summary>
+        /// 通道名称
+        /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// 通道索引
+        /// </summary>
         public int Channel { get; set; }
 
         private bool _onOff;
-        [Newtonsoft.Json.JsonIgnore]
+        /// <summary>
+        /// 通道状态
+        /// </summary>     
+        [Newtonsoft.Json.JsonIgnore]  
         public bool OnOff
         {
             get => _onOff;
             set
             {
-                int result;
-                if (value)
-                {
-                    result = base.TurnOnChannel(this.Channel);
-                    if (result == 0) _onOff = true;
-                    else _onOff = false;
-                }
-                else
-                {
-                    result = base.TurnOffChannel(this.Channel);
-                    if (result == 0) _onOff = false;
-                    else _onOff = true;
-                }
+                if (ChannelOnOffEvent == null) _onOff = false;
+                else _onOff = ChannelOnOffEvent(value);
             }
         }
         private int _intensity;
+        /// <summary>
+        /// 通道亮度值
+        /// </summary>
         public int Intensity
         {
             get => _intensity;
             set
             {
-                int result;
-                result = base.SetIntensity(this.Channel, value);
-                if (result == 0)
-                {
-                    _intensity = value;
-                }
-                else
-                {
-                    return;
-                }
+                if (ChannelSetIntensityEvent == null) _intensity = value;
+                else _intensity = ChannelSetIntensityEvent(value);
+                
             }
         }
     }

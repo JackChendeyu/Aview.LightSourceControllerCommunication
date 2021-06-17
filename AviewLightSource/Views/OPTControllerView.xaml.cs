@@ -27,21 +27,11 @@ namespace AviewLightSource.Views
             this.itemsControlChannels.ItemsSource = this._optControllerViewModel.GetOPTChannelCollection();
 
         }
-        
-        public OPTControllerView(OPTController opt)
-        {
-            this._optControllerViewModel.SetCurrentOPTObject(opt);
-        }
 
         public void OnDeviceHasOpened()
         {
             this.itemsControlChannels.ItemsSource = this._optControllerViewModel.GetOPTChannelCollection();
 
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            this.itemsControlChannels.ItemsSource= this._optControllerViewModel.GetOPTChannelCollection();
         }
     }
 }

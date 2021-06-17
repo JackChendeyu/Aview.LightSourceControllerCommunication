@@ -27,6 +27,7 @@ namespace AviewLightSource
         {
             InitializeComponent();
             this._optControllerView._optControllerViewModel.SetCurrentOPTObject(opt);
+            this._optControllerView.itemsControlChannels.ItemsSource = this._optControllerView._optControllerViewModel.GetOPTChannelCollection();
         }
     }
 }

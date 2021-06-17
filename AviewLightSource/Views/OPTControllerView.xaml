@@ -34,7 +34,7 @@
             </Setter>
         </Style>
         <!--Button Style End-->
-        
+
         <!--checkBox Style-->
         <Style x:Key="chkBullet" TargetType="CheckBox">
             <Setter Property="IsChecked" Value="False"/>
@@ -86,7 +86,7 @@
             </Setter>
         </Style>
         <!--CheckBox Style End-->
-        
+
         <!--Slider Style-->
         <SolidColorBrush x:Key="SliderThumb.Static.Foreground" Color="#FFE5E5E5"/>
         <SolidColorBrush x:Key="SliderThumb.MouseOver.Background" Color="#FFDCECFC"/>
@@ -346,6 +346,7 @@
         </Style>
         <!--Slider Style End-->
     </UserControl.Resources>
+    
     <Grid>
         <Grid.DataContext>
             <vm:OPTControllerViewModel x:Name="_optControllerViewModel"/>
@@ -390,6 +391,7 @@
                 Margin="5"
                 MaxHeight="30"
                 Content="断开"
+                
                 Command="{Binding CommandClose}"/>
         </StackPanel>
 
@@ -410,7 +412,6 @@
             </StackPanel>
         </GroupBox>
         <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="Info"/>
-        <Button Grid.Row="2" Grid.Column="2" Click="Button_Click"></Button>
         <Grid 
             Grid.Row="3" 
             Grid.Column="0" 
@@ -452,7 +453,7 @@
                                     Padding="5"
                                     VerticalAlignment="Center"
                                     BorderThickness="0,0,0,2" BorderBrush="AliceBlue"
-                                    Text="{Binding Intensity}"/>
+                                    Text="{Binding Intensity, UpdateSourceTrigger=PropertyChanged}"/>
                             <Slider 
                                     x:Name="slider1"
                                 Grid.Row="0"
@@ -474,4 +475,7 @@
         </Grid>
 
     </Grid>
+    
+    
+    
 </UserControl>

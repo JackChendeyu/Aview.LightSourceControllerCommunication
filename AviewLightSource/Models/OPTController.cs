@@ -60,7 +60,6 @@ namespace AviewLightSource
     }
     public class OPTController : CSharp_OPTControllerAPI.OPTControllerAPI
     {
-
         /// <summary>
         /// 当前对象序列化保存路径
         /// </summary>
@@ -105,26 +104,36 @@ namespace AviewLightSource
         /// </summary>     
         public ObservableCollection<OPTChannel> OPTChannelCollection { get; set; }
 
+
         public OPTController()
         {
             this.Model = OPT_COMMUNICATION_MODEL.SN; //默认通过SN码连接
             OPTChannelCollection = new ObservableCollection<OPTChannel>();
         }
 
-        #region Public Members
-
+        #region Public Methods
+        /// <summary>
+        /// 根据产品信息设置OPT光源控制器各通道亮度
+        /// </summary>
+        /// <returns>
+        /// 设置是否成功
+        /// true:设置成功
+        /// false:设置失败
+        /// </returns>
         public bool SetIntensityByTypeName()
         {
             OPTController opt = OPTControllerFactory.CreateInstance(SavePath);
+           
             if (opt?.OPTChannelCollection==null || opt?.OPTChannelCollection.Count==0)
                 return false;
             OPTChannelCollection = opt.OPTChannelCollection;
+
             int ret = 0;
             try
             {
-                for (int i = 0; i < OPTChannelCollection.Count; i++)
+                for (int i = 0; i < ChannelCount; i++)
                 {
-                    ret = base.SetIntensity(OPTChannelCollection[i].Channel, OPTChannelCollection[i].Intensity);
+                    ret = base.SetIntensity(opt.OPTChannelCollection[i].Channel, opt.OPTChannelCollection[i].Intensity);
                     if (ret != 0)
                         return false;
                 }
@@ -133,13 +142,17 @@ namespace AviewLightSource
             {
                 throw new Exception(ex.Message);
             }
+            ReadAllIntensity();
+
             return ret == 0;
         }
 
-
+        /// <summary>
+        /// 获取当前OPT光源控制器各通道亮度
+        /// </summary>
         public void ReadAllIntensity()      //Initial after this.Open function excuted
         {
-            OPTChannelCollection.Clear();           
+            OPTChannelCollection.Clear();
             int result;
             for (int i = 0; i < ChannelCount; i++)
             {
@@ -147,6 +160,35 @@ namespace AviewLightSource
                 {
                     Name = $"CH{i + 1}",
                     Channel = i + 1,
+                };
+                channelData.ChannelOnOffEvent += boolean =>
+                {
+                    int ret;
+                    if (boolean)
+                    {
+                        ret = base.TurnOnChannel(channelData.Channel);
+                        if (ret == 0) return true;
+                        else return false;
+                    }
+                    else
+                    {
+                        ret = base.TurnOffChannel(channelData.Channel);
+                        if (ret == 0) return false;
+                        else return true;
+                    }
+                };
+                channelData.ChannelSetIntensityEvent += variable =>
+                {
+                    int ret;
+                    ret = base.SetIntensity(channelData.Channel, variable);
+                    if (ret == 0)
+                    {
+                        return variable;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
                 };
                 result = base.TurnOnChannel(channelData.Channel);
                 if (result == 0)
@@ -159,9 +201,13 @@ namespace AviewLightSource
                 {
                     channelData.Intensity = value;
                 }
+               
                 OPTChannelCollection.Add(channelData);
             }
         }
+        /// <summary>
+        /// 保存当前OPT光源控制器配置
+        /// </summary>
         public void Save()
         {
             string objectStr = Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
@@ -170,7 +216,7 @@ namespace AviewLightSource
                 sw.Write(objectStr);
             }
         }
-        #endregion Public Members
+
 
         /// <summary>
         /// 断开连接OPT光源控制器
@@ -232,8 +278,18 @@ namespace AviewLightSource
                 base.TurnOffChannel(0);
                 System.Threading.Thread.Sleep(500);
                 base.TurnOnChannel(0);
-                
+                int result;
+                int count = default;
+                result = GetControllerChannels(ref count);
+                if (result == 0)
+                {
+                    ChannelCount = count;
+                    ReadAllIntensity();
+                }
+
             }
         }
+
+        #endregion Public Methods
     }
 }
