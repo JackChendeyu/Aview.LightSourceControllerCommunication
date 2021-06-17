@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:AviewLightSource"
         xmlns:view="clr-namespace:AviewLightSource.Views"
         mc:Ignorable="d"
-        Title="MainWindow" Height="550" Width="450">
+        Title="MainWindow"
+        Height="550" Width="480"  ResizeMode="NoResize">
     <view:OPTControllerView x:Name="_optControllerView"></view:OPTControllerView>
 </Window>

@@ -94,13 +94,13 @@ namespace AviewLightSource.ViewModels
         /// <summary>
         /// 当前OPT光源控制器序列号
         /// </summary>
-        public string SN
+        public string ConnectionAddress
         {
-            get => _opt?.SN;
+            get => _opt?.ConnectionAddress;
             set
             {
-                _opt.SN = value;
-                RaisePropertyChanged(nameof(SN));
+                _opt.ConnectionAddress = value;
+                RaisePropertyChanged(nameof(ConnectionAddress));
             }
         }
 
@@ -145,15 +145,27 @@ namespace AviewLightSource.ViewModels
         public void Scan()
         {
             List<string> list = new List<string>();
-
             StringBuilder sb = new StringBuilder();
-            _opt.GetControllerListOnEthernet(sb);
-            string[] deviceArray = sb?.ToString().Split(',');
-            for (int i = 0; i < deviceArray?.Length; i++)
+            switch (_opt.Model)
             {
-                list.Add(deviceArray[i]);
+                case OPT_COMMUNICATION_MODEL.COM:
+                    Aview.Public.Comunication.SerialPort.SerialPortHelper.GetCurrentPortNameCollection(sb);
+                    break;
+
+                case OPT_COMMUNICATION_MODEL.SN:
+                case OPT_COMMUNICATION_MODEL.IP:
+                    _opt.GetControllerListOnEthernet(sb);
+                    break;
             }
-            DeviceList = list;
+            if (sb.Length > 0)
+            {
+                string[] deviceArray = sb?.ToString().Split(',');
+                for (int i = 0; i < deviceArray?.Length; i++)
+                {
+                    list.Add(deviceArray[i]);
+                }
+                DeviceList = list;
+            }           
         }
         /// <summary>
         /// 打开指定OPT光源控制器
@@ -179,7 +191,7 @@ namespace AviewLightSource.ViewModels
             if (_opt.IsConnected)
             {
                 DeviceHasOpened?.Invoke();
-               
+                ReportMsg($"Address:{ConnectionAddress}");
             }         
 #endif
         }
@@ -199,7 +211,8 @@ namespace AviewLightSource.ViewModels
         public void SetCurrentOPTObject(OPTController opt)
         {
             this._opt = opt;
-           
+            ReportMsg($"Address:{ConnectionAddress}");
+
         }
 
         /// <summary>

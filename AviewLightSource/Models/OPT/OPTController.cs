@@ -78,15 +78,9 @@ namespace AviewLightSource
         [Newtonsoft.Json.JsonIgnore]
         public int ChannelUsedCount { get; set; }
         /// <summary>
-        /// OPT光源控制器IP地址
+        /// OPT光源控制器连接地址，根据OPT光源控制器连接状态可为IP地址格式，SN序列号格式，COM串口号格式
         /// </summary>
-        public string IPAddress { get; set; }
-        /// <summary>
-        /// OPT光源控制器序列号
-        /// </summary>
-        public string SN { get; set; }
-
-        //public string SerialPortName { get; set; }
+        public string ConnectionAddress;
 
         /// <summary>
         /// OPT光源控制器连接状态
@@ -217,7 +211,40 @@ namespace AviewLightSource
             }
         }
 
-
+        /// <summary>
+        /// 打开当前OPT光源控制器所有通道
+        /// </summary>
+        /// <returns></returns>
+        public bool TurnOnAllChannels()
+        {
+            return 0 == base.TurnOnChannel(0);
+        }
+        /// <summary>
+        /// 关闭当前OPT光源控制器所有通道
+        /// </summary>
+        /// <returns></returns>
+        public bool TurnOffAllChannels()
+        {
+            return 0 == base.TurnOffChannel(0);
+        }
+        /// <summary>
+        /// 打开当前OPT光源控制器指定通道
+        /// </summary>
+        /// <param name="index">通道索引，从1开始</param>
+        /// <returns></returns>
+        public new bool TurnOnChannel(int index)
+        {
+            return 0 == base.TurnOnChannel(index);
+        }
+        /// <summary>
+        /// 关闭当前OPT光源控制器指定通道
+        /// </summary>
+        /// <param name="index">通道索引，从1开始</param>
+        /// <returns></returns>
+        public new bool TurnOffChannel(int index)
+        {
+            return 0 == base.TurnOffChannel(index);
+        }
         /// <summary>
         /// 断开连接OPT光源控制器
         /// </summary>
@@ -248,28 +275,19 @@ namespace AviewLightSource
         public void Open()
         {
             int ret = default;
+            if (string.IsNullOrEmpty(this.ConnectionAddress))
+            {
+                throw new Exception("当前光源控制器连接地址为空，无法建立有效的连接");
+            }
             switch (this.Model)
             {
-                case OPT_COMMUNICATION_MODEL.COM:
-                    ret = -1;
+                case OPT_COMMUNICATION_MODEL.COM:                  
+                    ret = base.InitSerialPort(this.ConnectionAddress);
                     break;
 
-                case OPT_COMMUNICATION_MODEL.IP:
-                    if (string.IsNullOrEmpty(this.IPAddress))
-                    {
-                        ret = -1;
-                        break;
-                    }
-                    ret = base.CreateEthernetConnectionByIP(this.IPAddress);
-                    break;
-
-                case OPT_COMMUNICATION_MODEL.SN:
-                    if (string.IsNullOrEmpty(this.SN))
-                    {
-                        ret = -1;
-                        break;
-                    }
-                    ret = base.CreateEthernetConnectionBySN(SN);
+                case OPT_COMMUNICATION_MODEL.IP:                                    
+                case OPT_COMMUNICATION_MODEL.SN:                   
+                    ret = base.CreateEthernetConnectionBySN(this.ConnectionAddress);
                     break;
             }
             if (ret == 0)
