@@ -1,0 +1,525 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AviewLightSource</name>
+    </assembly>
+    <members>
+        <member name="F:AviewLightSource.OPTChannel.ChannelOnOffEvent">
+            <summary>
+            通道打开关闭事件
+            </summary>
+        </member>
+        <member name="F:AviewLightSource.OPTChannel.ChannelSetIntensityEvent">
+            <summary>
+            通道设置亮度值事件
+            </summary>
+        </member>
+        <member name="P:AviewLightSource.OPTChannel.Name">
+            <summary>
+            通道名称
+            </summary>
+        </member>
+        <member name="P:AviewLightSource.OPTChannel.Channel">
+            <summary>
+            通道索引
+            </summary>
+        </member>
+        <member name="P:AviewLightSource.OPTChannel.Intensity">
+            <summary>
+            通道亮度值
+            </summary>
+        </member>
+        <member name="T:AviewLightSource.Views.UCLightSourceSlider">
+            <summary>
+            UCLightSourceSlider.xaml 的交互逻辑
+            </summary>
+            <summary>
+            UCLightSourceSlider
+            </summary>
+        </member>
+        <member name="M:AviewLightSource.Views.UCLightSourceSlider.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:AviewLightSource.Views.OPTControllerView">
+            <summary>
+            OPTControllerView.xaml 的交互逻辑
+            </summary>
+            <summary>
+            OPTControllerView
+            </summary>
+        </member>
+        <member name="M:AviewLightSource.Views.OPTControllerView.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:AviewLightSource.MainWindow">
+            <summary>
+            MainWindow.xaml 的交互逻辑
+            </summary>
+            <summary>
+            MainWindow
+            </summary>
+        </member>
+        <member name="M:AviewLightSource.MainWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:AviewLightSource.OPT_COMMUNICATION_MODEL">
+            <summary>
+            OPT光源连接方式
+            </summary>
+        </member>
+        <member name="F:AviewLightSource.OPT_COMMUNICATION_MODEL.COM">
+            <summary>
+            COM串口连结
+            </summary>
+        </member>
+        <member name="F:AviewLightSource.OPT_COMMUNICATION_MODEL.SN">
+            <summary>
+            通过OPT设备SN码连接
+            </summary>
+        </member>
+        <member name="F:AviewLightSource.OPT_COMMUNICATION_MODEL.IP">
+            <summary>
+            通过OPT设备以太网IP地址连接
+            </summary>
+        </member>
+        <member name="T:AviewLightSource.OPT_CHANNEL_STATE">
+            <summary>
+            OPT控制器通道状态
+            </summary>
+        </member>
+        <member name="F:AviewLightSource.OPT_CHANNEL_STATE.LIGHTSOURCE_CONNECTED">
+            <summary>
+            已连接光源
+            </summary>
+        </member>
+        <member name="F:AviewLightSource.OPT_CHANNEL_STATE.LIGHTSOURCE_DISCONNECTED">
+            <summary>
+            未连接光源
+            </summary>
+        </member>
+        <member name="F:AviewLightSource.OPT_CHANNEL_STATE.SHORTCIRCUIT_PROTECTION">
+            <summary>
+            短路保护
+            </summary>
+        </member>
+        <member name="F:AviewLightSource.OPT_CHANNEL_STATE.OVERVOLTAGE_PROTECTION">
+            <summary>
+            过压保护
+            </summary>
+        </member>
+        <member name="F:AviewLightSource.OPT_CHANNEL_STATE.OVERCURRENT_PROTECTION">
+            <summary>
+            过流保护
+            </summary>
+        </member>
+        <member name="P:AviewLightSource.OPTController.SavePath">
+            <summary>
+            当前对象序列化保存路径
+            </summary>
+        </member>
+        <member name="P:AviewLightSource.OPTController.ChannelCount">
+            <summary>
+            OPT光源控制器通道数
+            </summary>
+        </member>
+        <member name="P:AviewLightSource.OPTController.ChannelUsedCount">
+            <summary>
+            OPT光源控制器当前使用通道数
+            </summary>
+        </member>
+        <member name="F:AviewLightSource.OPTController.ConnectionAddress">
+            <summary>
+            OPT光源控制器连接地址，根据OPT光源控制器连接状态可为IP地址格式，SN序列号格式，COM串口号格式
+            </summary>
+        </member>
+        <member name="P:AviewLightSource.OPTController.IsConnected">
+            <summary>
+            OPT光源控制器连接状态
+            </summary>
+        </member>
+        <member name="P:AviewLightSource.OPTController.Model">
+            <summary>
+            OPT光源控制器连接方式
+            </summary>
+        </member>
+        <member name="P:AviewLightSource.OPTController.OPTChannelCollection">
+            <summary>
+            OPT光源控制器通道数据集合
+            </summary>     
+        </member>
+        <member name="M:AviewLightSource.OPTController.SetIntensityByTypeName(System.String)">
+            <summary>
+            根据产品信息设置OPT光源控制器各通道亮度
+            </summary>
+            <param name="savePath"></param>
+            <returns>
+            设置是否成功
+            true:设置成功
+            false:设置失败</returns>
+        </member>
+        <member name="M:AviewLightSource.OPTController.ReadAllIntensity">
+            <summary>
+            获取当前OPT光源控制器各通道亮度
+            </summary>
+        </member>
+        <member name="M:AviewLightSource.OPTController.Save">
+            <summary>
+            保存当前OPT光源控制器配置
+            </summary>
+        </member>
+        <member name="M:AviewLightSource.OPTController.TurnOnAllChannels">
+            <summary>
+            打开当前OPT光源控制器所有通道
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AviewLightSource.OPTController.TurnOffAllChannels">
+            <summary>
+            关闭当前OPT光源控制器所有通道
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:AviewLightSource.OPTController.TurnOnChannel(System.Int32)">
+            <summary>
+            打开当前OPT光源控制器指定通道
+            </summary>
+            <param name="index">通道索引，从1开始</param>
+            <returns></returns>
+        </member>
+        <member name="M:AviewLightSource.OPTController.TurnOffChannel(System.Int32)">
+            <summary>
+            关闭当前OPT光源控制器指定通道
+            </summary>
+            <param name="index">通道索引，从1开始</param>
+            <returns></returns>
+        </member>
+        <member name="M:AviewLightSource.OPTController.Close">
+            <summary>
+            断开连接OPT光源控制器
+            </summary>
+        </member>
+        <member name="M:AviewLightSource.OPTController.Open">
+            <summary>
+            连接OPT光源控制器
+            </summary>
+        </member>
+        <member name="P:AviewLightSource.ViewModels.OPTControllerViewModel.IsIPComunication">
+            <summary>
+            OPT光源控制器是否为IP连接方式
+            </summary>
+        </member>
+        <member name="P:AviewLightSource.ViewModels.OPTControllerViewModel.IsSNComunication">
+            <summary>
+            OPT光源控制器是否为SN连接方式
+            </summary>
+        </member>
+        <member name="P:AviewLightSource.ViewModels.OPTControllerViewModel.IsCOMComunication">
+            <summary>
+            OPT光源控制器是否为COM连接方式
+            </summary>
+        </member>
+        <member name="P:AviewLightSource.ViewModels.OPTControllerViewModel.DeviceList">
+            <summary>
+            当前以太网下OPT光源控制器设备数量
+            </summary>
+        </member>
+        <member name="P:AviewLightSource.ViewModels.OPTControllerViewModel.Info">
+            <summary>
+            运行信息
+            </summary>
+        </member>
+        <member name="P:AviewLightSource.ViewModels.OPTControllerViewModel.ConnectionAddress">
+            <summary>
+            当前OPT光源控制器序列号
+            </summary>
+        </member>
+        <member name="M:AviewLightSource.ViewModels.OPTControllerViewModel.Save">
+            <summary>
+            保存当前配置
+            </summary>
+        </member>
+        <member name="M:AviewLightSource.ViewModels.OPTControllerViewModel.Scan">
+            <summary>
+            搜索以太网内OPT光源控制器设备
+            </summary>
+        </member>
+        <member name="M:AviewLightSource.ViewModels.OPTControllerViewModel.Open">
+            <summary>
+            打开指定OPT光源控制器
+            </summary>
+        </member>
+        <member name="M:AviewLightSource.ViewModels.OPTControllerViewModel.Close">
+            <summary>
+            关闭指定OPT光源控制器
+            </summary>
+        </member>
+        <member name="M:AviewLightSource.ViewModels.OPTControllerViewModel.SetCurrentOPTObject(AviewLightSource.OPTController)">
+            <summary>
+            设置当前OPT光源控制器对象
+            </summary>
+            <param name="opt">当前OPT光源控制器赋值对象</param>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:AviewLightSource.ViewModels.OPTControllerViewModel.GetOPTChannelCollection" -->
+        <member name="M:AviewLightSource.ViewModels.OPTControllerViewModel.ReportMsg(System.String)">
+            <summary>
+            信息
+            </summary>
+            <param name="message">将要汇报的信息</param>
+        </member>
+        <member name="T:AviewLightSource.App">
+            <summary>
+            App.xaml 的交互逻辑
+            </summary>
+            <summary>
+            App
+            </summary>
+        </member>
+        <member name="M:AviewLightSource.App.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:AviewLightSource.Properties.Resources">
+            <summary>
+              一个强类型的资源类，用于查找本地化的字符串等。
+            </summary>
+        </member>
+        <member name="P:AviewLightSource.Properties.Resources.ResourceManager">
+            <summary>
+              返回此类使用的缓存的 ResourceManager 实例。
+            </summary>
+        </member>
+        <member name="P:AviewLightSource.Properties.Resources.Culture">
+            <summary>
+              重写当前线程的 CurrentUICulture 属性，对
+              使用此强类型资源类的所有资源查找执行重写。
+            </summary>
+        </member>
+        <member name="M:Aview.Public.Comunication.SerialPort.SerialPortHelper.GetCurrentPortNameCollection(System.Text.StringBuilder)">
+            <summary>
+            获取当前设备的串口名称集合
+            </summary>
+            <param name="sb">串口名称集合赋值对象</param>
+        </member>
+        <member name="T:MvvmFoundation.Wpf.Messenger">
+            <summary>
+            Provides loosely-coupled messaging between
+            various colleague objects.  All references to objects
+            are stored weakly, to prevent memory leaks.
+            </summary>
+        </member>
+        <member name="M:MvvmFoundation.Wpf.Messenger.Register(System.String,System.Action)">
+            <summary>
+            Registers a callback method, with no parameter, to be invoked when a specific message is broadcasted.
+            </summary>
+            <param name="message">The message to register for.</param>
+            <param name="callback">The callback to be called when this message is broadcasted.</param>
+        </member>
+        <member name="M:MvvmFoundation.Wpf.Messenger.Register``1(System.String,System.Action{``0})">
+            <summary>
+            Registers a callback method, with a parameter, to be invoked when a specific message is broadcasted.
+            </summary>
+            <param name="message">The message to register for.</param>
+            <param name="callback">The callback to be called when this message is broadcasted.</param>
+        </member>
+        <member name="M:MvvmFoundation.Wpf.Messenger.NotifyColleagues(System.String,System.Object)">
+            <summary>
+            Notifies all registered parties that a message is being broadcasted.
+            </summary>
+            <param name="message">The message to broadcast.</param>
+            <param name="parameter">The parameter to pass together with the message.</param>
+        </member>
+        <member name="M:MvvmFoundation.Wpf.Messenger.NotifyColleagues(System.String)">
+            <summary>
+            Notifies all registered parties that a message is being broadcasted.
+            </summary>
+            <param name="message">The message to broadcast.</param>
+        </member>
+        <member name="T:MvvmFoundation.Wpf.Messenger.MessageToActionsMap">
+            <summary>
+            This class is an implementation detail of the Messenger class.
+            </summary>
+        </member>
+        <member name="M:MvvmFoundation.Wpf.Messenger.MessageToActionsMap.AddAction(System.String,System.Object,System.Reflection.MethodInfo,System.Type)">
+            <summary>
+            Adds an action to the list.
+            </summary>
+            <param name="message">The message to register.</param>
+            <param name="target">The target object to invoke, or null.</param>
+            <param name="method">The method to invoke.</param>
+            <param name="actionType">The type of the Action delegate.</param>
+        </member>
+        <member name="M:MvvmFoundation.Wpf.Messenger.MessageToActionsMap.GetActions(System.String)">
+            <summary>
+            Gets the list of actions to be invoked for the specified message
+            </summary>
+            <param name="message">The message to get the actions for</param>
+            <returns>Returns a list of actions that are registered to the specified message</returns>
+        </member>
+        <member name="M:MvvmFoundation.Wpf.Messenger.MessageToActionsMap.TryGetParameterType(System.String,System.Type@)">
+            <summary>
+            Get the parameter type of the actions registered for the specified message.
+            </summary>
+            <param name="message">The message to check for actions.</param>
+            <param name="parameterType">
+            When this method returns, contains the type for parameters 
+            for the registered actions associated with the specified message, if any; otherwise, null.
+            This will also be null if the registered actions have no parameters.
+            This parameter is passed uninitialized.
+            </param>
+            <returns>true if any actions were registered for the message</returns>
+        </member>
+        <member name="T:MvvmFoundation.Wpf.Messenger.WeakAction">
+            <summary>
+            This class is an implementation detail of the MessageToActionsMap class.
+            </summary>
+        </member>
+        <member name="M:MvvmFoundation.Wpf.Messenger.WeakAction.#ctor(System.Object,System.Reflection.MethodInfo,System.Type)">
+            <summary>
+            Constructs a WeakAction.
+            </summary>
+            <param name="target">The object on which the target method is invoked, or null if the method is static.</param>
+            <param name="method">The MethodInfo used to create the Action.</param>
+            <param name="parameterType">The type of parameter to be passed to the action. Pass null if there is no parameter.</param>
+        </member>
+        <member name="M:MvvmFoundation.Wpf.Messenger.WeakAction.CreateAction">
+            <summary>
+            Creates a "throw away" delegate to invoke the method on the target, or null if the target object is dead.
+            </summary>
+        </member>
+        <member name="T:MvvmFoundation.Wpf.ObservableObject">
+            <summary>
+            This is the abstract base class for any object that provides property change notifications.  
+            </summary>
+        </member>
+        <member name="M:MvvmFoundation.Wpf.ObservableObject.RaisePropertyChanged(System.String)">
+            <summary>
+            Raises this object's PropertyChanged event.
+            </summary>
+            <param name="propertyName">The property that has a new value.</param>
+        </member>
+        <member name="M:MvvmFoundation.Wpf.ObservableObject.VerifyPropertyName(System.String)">
+            <summary>
+            Warns the developer if this object does not have
+            a public property with the specified name. This 
+            method does not exist in a Release build.
+            </summary>
+        </member>
+        <member name="P:MvvmFoundation.Wpf.ObservableObject.ThrowOnInvalidPropertyName">
+            <summary>
+            Returns whether an exception is thrown, or if a Debug.Fail() is used
+            when an invalid property name is passed to the VerifyPropertyName method.
+            The default value is false, but subclasses used by unit tests might 
+            override this property's getter to return true.
+            </summary>
+        </member>
+        <member name="E:MvvmFoundation.Wpf.ObservableObject.PropertyChanged">
+            <summary>
+            Raised when a property on this object has a new value.
+            </summary>
+        </member>
+        <member name="T:MvvmFoundation.Wpf.PropertyObserver`1">
+            <summary>
+            Monitors the PropertyChanged event of an object that implements INotifyPropertyChanged,
+            and executes callback methods (i.e. handlers) registered for properties of that object.
+            </summary>
+            <typeparam name="TPropertySource">The type of object to monitor for property changes.</typeparam>
+        </member>
+        <member name="M:MvvmFoundation.Wpf.PropertyObserver`1.#ctor(`0)">
+            <summary>
+            Initializes a new instance of PropertyObserver, which
+            observes the 'propertySource' object for property changes.
+            </summary>
+            <param name="propertySource">The object to monitor for property changes.</param>
+        </member>
+        <member name="M:MvvmFoundation.Wpf.PropertyObserver`1.RegisterHandler(System.Linq.Expressions.Expression{System.Func{`0,System.Object}},System.Action{`0})">
+            <summary>
+            Registers a callback to be invoked when the PropertyChanged event has been raised for the specified property.
+            </summary>
+            <param name="expression">A lambda expression like 'n => n.PropertyName'.</param>
+            <param name="handler">The callback to invoke when the property has changed.</param>
+            <returns>The object on which this method was invoked, to allow for multiple invocations chained together.</returns>
+        </member>
+        <member name="M:MvvmFoundation.Wpf.PropertyObserver`1.UnregisterHandler(System.Linq.Expressions.Expression{System.Func{`0,System.Object}})">
+            <summary>
+            Removes the callback associated with the specified property.
+            </summary>
+            <param name="propertyName">A lambda expression like 'n => n.PropertyName'.</param>
+            <returns>The object on which this method was invoked, to allow for multiple invocations chained together.</returns>
+        </member>
+        <member name="T:MvvmFoundation.Wpf.RelayCommand`1">
+            <summary>
+            A command whose sole purpose is to 
+            relay its functionality to other
+            objects by invoking delegates. The
+            default return value for the CanExecute
+            method is 'true'.
+            </summary>
+        </member>
+        <member name="M:MvvmFoundation.Wpf.RelayCommand`1.#ctor(System.Action{`0},System.Predicate{`0})">
+            <summary>
+            Creates a new command.
+            </summary>
+            <param name="execute">The execution logic.</param>
+            <param name="canExecute">The execution status logic.</param>
+        </member>
+        <member name="T:MvvmFoundation.Wpf.RelayCommand">
+            <summary>
+            A command whose sole purpose is to 
+            relay its functionality to other
+            objects by invoking delegates. The
+            default return value for the CanExecute
+            method is 'true'.
+            </summary>
+        </member>
+        <member name="M:MvvmFoundation.Wpf.RelayCommand.#ctor(System.Action)">
+            <summary>
+            Creates a new command that can always execute.
+            </summary>
+            <param name="execute">The execution logic.</param>
+        </member>
+        <member name="M:MvvmFoundation.Wpf.RelayCommand.#ctor(System.Action,System.Func{System.Boolean})">
+            <summary>
+            Creates a new command.
+            </summary>
+            <param name="execute">The execution logic.</param>
+            <param name="canExecute">The execution status logic.</param>
+        </member>
+        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+            <summary>
+            GeneratedInternalTypeHelper
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+            <summary>
+            CreateInstance
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            GetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            SetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+            <summary>
+            CreateDelegate
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+            <summary>
+            AddEventHandler
+            </summary>
+        </member>
+    </members>
+</doc>

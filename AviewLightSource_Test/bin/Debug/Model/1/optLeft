@@ -1,0 +1,40 @@
+{
+  "SavePath": "E:\\项目\\立景\\立景测试设备_LJ21079-FT50-B\\code\\LJ_FinalTest_Machine\\WpfMN200_YH\\bin\\Debug\\Model\\1\\optLeft",
+  "IPAddress": null,
+  "SN": "AA53283543",
+  "Model": 1,
+  "Channels": [
+    {
+      "channel": 1,
+      "intensity": 61
+    },
+    {
+      "channel": 2,
+      "intensity": 255
+    },
+    {
+      "channel": 3,
+      "intensity": 80
+    },
+    {
+      "channel": 4,
+      "intensity": 85
+    },
+    {
+      "channel": 5,
+      "intensity": 80
+    },
+    {
+      "channel": 6,
+      "intensity": 80
+    },
+    {
+      "channel": 7,
+      "intensity": 250
+    },
+    {
+      "channel": 8,
+      "intensity": 82
+    }
+  ]
+}
