@@ -32,11 +32,11 @@ namespace AviewLightSource
                         str = sr.ReadToEnd();
                     }
                 }
-                opt = Newtonsoft.Json.JsonConvert.DeserializeObject<OPTController>(str);
+                opt = AviewLightSource.Serialize.XmlSeralizer.DeXMLSerialize<OPTController>(str);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                opt = new OPTController();
+                return new OPTController() { SavePath = fullPath };
             }
             opt.SavePath = fullPath;
             return opt;

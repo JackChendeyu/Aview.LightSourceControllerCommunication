@@ -1,4 +1,4 @@
-﻿//#define TEST
+﻿#define TEST
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -118,7 +118,7 @@ namespace AviewLightSource.ViewModels
         public RelayCommand CommandClose { get => new RelayCommand(Close, () => _opt.IsConnected); }
 
         //Save
-        public RelayCommand CommandSave { get => new RelayCommand(Save); }      
+        public RelayCommand CommandSave { get => new RelayCommand(Save, () => _opt.IsConnected); }      
         /******************************************************************************/
 
         #region Constructors
@@ -175,6 +175,7 @@ namespace AviewLightSource.ViewModels
 #if TEST
             _opt.ChannelCount = 8;
             _opt.OPTChannelCollection = new ObservableCollection<OPTChannel>();
+            _opt.IsConnected = true;
             for (int i = 0; i < _opt.ChannelCount; i++)
             {
                 OPTChannel channel = new OPTChannel();

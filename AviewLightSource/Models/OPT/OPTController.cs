@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using System.Xml.Serialization;
 
 namespace AviewLightSource
 {
@@ -48,35 +49,36 @@ namespace AviewLightSource
         /// <summary>
         /// 短路保护
         /// </summary>
-        SHORT_CIRCUIT_PROTECTION = 2,
+        SHORTCIRCUIT_PROTECTION = 2,
         /// <summary>
         /// 过压保护
         /// </summary>
-        OVER_VOLTAGE_PROTECTION = 3,
+        OVERVOLTAGE_PROTECTION = 3,
         /// <summary>
         /// 过流保护
         /// </summary>
-        OVER_CURRENT_PROTECTION = 4
+        OVERCURRENT_PROTECTION = 4
     }
     public class OPTController : CSharp_OPTControllerAPI.OPTControllerAPI
     {
         /// <summary>
         /// 当前对象序列化保存路径
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [XmlIgnore]
         public string SavePath { get; set; }
 
         /// <summary>
         /// OPT光源控制器通道数
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [XmlIgnore]
         public int ChannelCount { get; set; }
 
         /// <summary>
         /// OPT光源控制器当前使用通道数
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [XmlIgnore]
         public int ChannelUsedCount { get; set; }
+
         /// <summary>
         /// OPT光源控制器连接地址，根据OPT光源控制器连接状态可为IP地址格式，SN序列号格式，COM串口号格式
         /// </summary>
@@ -85,7 +87,7 @@ namespace AviewLightSource
         /// <summary>
         /// OPT光源控制器连接状态
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [XmlIgnore]
         public bool IsConnected { get; set; } = false;
 
         /// <summary>
@@ -106,20 +108,26 @@ namespace AviewLightSource
         }
 
         #region Public Methods
+
         /// <summary>
         /// 根据产品信息设置OPT光源控制器各通道亮度
         /// </summary>
+        /// <param name="savePath"></param>
         /// <returns>
         /// 设置是否成功
         /// true:设置成功
-        /// false:设置失败
-        /// </returns>
-        public bool SetIntensityByTypeName()
+        /// false:设置失败</returns>
+        public bool SetIntensityByTypeName(string savePath)
         {
-            OPTController opt = OPTControllerFactory.CreateInstance(SavePath);
-           
-            if (opt?.OPTChannelCollection==null || opt?.OPTChannelCollection.Count==0)
+            OPTController opt = OPTControllerFactory.CreateInstance(savePath);
+            if (opt == null)
+            {
                 return false;
+            }
+            SavePath = savePath;
+            if (opt?.OPTChannelCollection == null || opt?.OPTChannelCollection.Count == 0)
+                return false;
+
             OPTChannelCollection = opt.OPTChannelCollection;
 
             int ret = 0;
@@ -136,7 +144,6 @@ namespace AviewLightSource
             {
                 throw new Exception(ex.Message);
             }
-            ReadAllIntensity();
 
             return ret == 0;
         }
@@ -148,42 +155,8 @@ namespace AviewLightSource
         {
             OPTChannelCollection.Clear();
             int result;
-            for (int i = 0; i < ChannelCount; i++)
+            foreach (var channelData in OPTChannelCollection)
             {
-                OPTChannel channelData = new OPTChannel()
-                {
-                    Name = $"CH{i + 1}",
-                    Channel = i + 1,
-                };
-                channelData.ChannelOnOffEvent += boolean =>
-                {
-                    int ret;
-                    if (boolean)
-                    {
-                        ret = base.TurnOnChannel(channelData.Channel);
-                        if (ret == 0) return true;
-                        else return false;
-                    }
-                    else
-                    {
-                        ret = base.TurnOffChannel(channelData.Channel);
-                        if (ret == 0) return false;
-                        else return true;
-                    }
-                };
-                channelData.ChannelSetIntensityEvent += variable =>
-                {
-                    int ret;
-                    ret = base.SetIntensity(channelData.Channel, variable);
-                    if (ret == 0)
-                    {
-                        return variable;
-                    }
-                    else
-                    {
-                        return 0;
-                    }
-                };
                 result = base.TurnOnChannel(channelData.Channel);
                 if (result == 0)
                 {
@@ -195,8 +168,6 @@ namespace AviewLightSource
                 {
                     channelData.Intensity = value;
                 }
-               
-                OPTChannelCollection.Add(channelData);
             }
         }
         /// <summary>
@@ -204,7 +175,7 @@ namespace AviewLightSource
         /// </summary>
         public void Save()
         {
-            string objectStr = Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            string objectStr = AviewLightSource.Serialize.XmlSeralizer.XMLSerialize(this);
             using (System.IO.StreamWriter sw = new System.IO.StreamWriter(SavePath))
             {
                 sw.Write(objectStr);
@@ -281,28 +252,64 @@ namespace AviewLightSource
             }
             switch (this.Model)
             {
-                case OPT_COMMUNICATION_MODEL.COM:                  
+                case OPT_COMMUNICATION_MODEL.COM:
                     ret = base.InitSerialPort(this.ConnectionAddress);
                     break;
 
-                case OPT_COMMUNICATION_MODEL.IP:                                    
-                case OPT_COMMUNICATION_MODEL.SN:                   
+                case OPT_COMMUNICATION_MODEL.IP:
+                case OPT_COMMUNICATION_MODEL.SN:
                     ret = base.CreateEthernetConnectionBySN(this.ConnectionAddress);
                     break;
             }
             if (ret == 0)
             {
-                IsConnected = true;               
-                base.TurnOffChannel(0);
-                System.Threading.Thread.Sleep(500);
-                base.TurnOnChannel(0);
+                IsConnected = true;
                 int result;
                 int count = default;
                 result = GetControllerChannels(ref count);
                 if (result == 0)
                 {
                     ChannelCount = count;
-                    ReadAllIntensity();
+
+                    for (int i = 0; i < ChannelCount; i++)
+                    {
+                        OPTChannel channelData = new OPTChannel()
+                        {
+                            Name = $"CH{i + 1}",
+                            Channel = i + 1,
+                        };
+                        channelData.ChannelOnOffEvent += boolean =>
+                        {
+                            int returnRet;
+                            if (boolean)
+                            {
+                                returnRet = base.TurnOnChannel(channelData.Channel);
+                                if (returnRet == 0) return true;
+                                else return false;
+                            }
+                            else
+                            {
+                                returnRet = base.TurnOffChannel(channelData.Channel);
+                                if (returnRet == 0) return false;
+                                else return true;
+                            }
+                        };
+                        channelData.ChannelSetIntensityEvent += variable =>
+                        {
+                            int returnRet;
+                            returnRet = base.SetIntensity(channelData.Channel, variable);
+                            if (returnRet == 0)
+                            {
+                                return variable;
+                            }
+                            else
+                            {
+                                return 0;
+                            }
+                        };
+                        OPTChannelCollection.Add(channelData);
+
+                    }
                 }
 
             }

@@ -3,21 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace AviewLightSource
 {
-    public class OPTChannel : CSharp_OPTControllerAPI.OPTControllerAPI
+    public class OPTChannel 
     {
         /// <summary>
         /// 通道打开关闭事件
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [XmlIgnore]
         public Func<bool,bool> ChannelOnOffEvent;
 
         /// <summary>
         /// 通道设置亮度值事件
         /// </summary>
-        [Newtonsoft.Json.JsonIgnore]
+        [XmlIgnore]
         public Func<int, int> ChannelSetIntensityEvent;
 
         /// <summary>
@@ -31,10 +32,10 @@ namespace AviewLightSource
         public int Channel { get; set; }
 
         private bool _onOff;
+        [XmlIgnore]
         /// <summary>
         /// 通道状态
         /// </summary>     
-        [Newtonsoft.Json.JsonIgnore]  
         public bool OnOff
         {
             get => _onOff;

@@ -3,9 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AviewLightSource", "AviewLightSource\AviewLightSource.csproj", "{411A5186-C3DA-497B-AEB1-F58CD8BE731C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AviewLightSourceControllerLibary", "AviewLightSource\AviewLightSourceControllerLibary.csproj", "{411A5186-C3DA-497B-AEB1-F58CD8BE731C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AviewLightSource_Test", "AviewLightSource_Test\AviewLightSource_Test.csproj", "{3947F8F1-E944-4E20-AF17-7612E7618C3D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AviewLightSourceControllerLibary_Example", "AviewLightSource_Test\AviewLightSourceControllerLibary_Example.csproj", "{3947F8F1-E944-4E20-AF17-7612E7618C3D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{411A5186-C3DA-497B-AEB1-F58CD8BE731C} = {411A5186-C3DA-497B-AEB1-F58CD8BE731C}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
